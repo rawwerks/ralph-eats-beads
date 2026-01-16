@@ -1,8 +1,8 @@
-# Ralph Eats Beads 🦀
+# Ralph Eats Beads
 
 ![Ralph Eats Beads](ralph-eats-beads.jpg)
 
-Autonomous AI coding loop using [bd (beads)](https://github.com/rawwerks/bd) for task management with parallel tmux subagents.
+"[Ralph Wiggum](https://ghuntley.com/ralph/)" autonomous AI coding loop, using [bd (beads)](https://github.com/steveyegge/beads) for task management with parallel tmux subagents.
 
 Ships features while you sleep.
 
@@ -24,7 +24,7 @@ claude plugin install ralph-eats-beads@ralph-eats-beads
 
 ## What It Does
 
-Ralph picks issues from `bd ready`, spawns parallel Claude agents in tmux windows to implement them, and closes issues on success. Each iteration:
+The "parent" Ralph/Claude picks issues from `bd ready`, spawns parallel Ralph/Claude subagents in tmux windows to implement them, and closes issues on success. Each iteration:
 
 1. Parent agent checks `bd ready` for available work
 2. Spawns 3-5 subagent tmux windows (one per issue)
@@ -43,7 +43,7 @@ ralph (tmux session)
 
 ## Prerequisites
 
-- **[bd](https://github.com/rawwerks/bd)** - Issue tracker (beads)
+- **[bd (beads)](https://github.com/steveyegge/beads)** - Issue tracker (beads)
 - **tmux** - Terminal multiplexer
 - **claude** - Claude CLI with `--dangerously-skip-permissions`
 
