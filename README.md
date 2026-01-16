@@ -1,5 +1,7 @@
 # Ralph Eats Beads 🦀
 
+![Ralph Eats Beads](ralph-eats-beads.jpg)
+
 Autonomous AI coding loop using [bd (beads)](https://github.com/rawwerks/bd) for task management with parallel tmux subagents.
 
 Ships features while you sleep.
