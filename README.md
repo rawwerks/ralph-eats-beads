@@ -78,6 +78,31 @@ tmux attach -t ralph-<project>
 - Issue stays open for next iteration or manual fix
 - Watchdog kills stuck windows after 2 nudge attempts
 
+## Planning: Converting Requirements to Issues
+
+In a typical "Ralph eats beads" workflow, you would have already converted your plan into bd epics, issues, dependencies, and notes before running `ralph.sh`. This is the recommended approach—think through the work breakdown, set up proper dependencies, and let Ralph execute.
+
+However, if you haven't done that step yet, you can use the **planner script** to generate bd issues from a requirements file:
+
+```bash
+# From a requirements file
+./scripts/planner.sh requirements.md
+
+# From inline text
+./scripts/planner.sh <<< "Add OAuth2 authentication with Google and GitHub"
+
+# From a pipe
+cat feature-spec.md | ./scripts/planner.sh
+```
+
+The planner runs a recursive loop that:
+1. Reads your requirements
+2. Creates an epic and stories in bd
+3. Sets up dependencies between issues
+4. Iterates until the plan fully covers the requirements
+
+Once planning is complete, run `ralph.sh` to implement.
+
 ## Files
 
 | File | Purpose |
