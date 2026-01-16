@@ -1,5 +1,5 @@
 ---
-name: ralph-bd
+name: ralph-eats-beads
 description: Autonomous AI coding loop using bd for task management with parallel tmux subagents. Ships features while you sleep.
 license: MIT
 ---

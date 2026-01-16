@@ -4,25 +4,12 @@ Autonomous AI coding loop using bd (beads) for task management with parallel tmu
 
 Ships features while you sleep.
 
-## Install in Claude Code
-
-### Step 1: Add the marketplace
+## Installation via Raygent Skills Marketplace
 
 ```
-/plugin marketplace add rawwerks/ralph-eats-beads
+/plugin marketplace add rawwerks/raygent-skills
+/plugin install ralph-eats-beads@raygent-skills
 ```
-
-### Step 2: Install the plugin
-
-```
-/plugin install ralph-bd@ralph-eats-beads
-```
-
-Or browse and install:
-1. Select `Browse and install plugins`
-2. Select `ralph-eats-beads`
-3. Select `ralph-bd`
-4. Select `Install now`
 
 ## Overview
 
@@ -59,11 +46,7 @@ tmux attach -t ralph
 
 ## Full Documentation
 
-See [SKILL.md](SKILL.md) for complete documentation including:
-- Planner usage (AI-generated issue plans)
-- Watchdog configuration
-- Observer commands
-- Best practices
+See [SKILL.md](SKILL.md) for complete documentation.
 
 ## License
 
