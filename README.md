@@ -4,7 +4,9 @@
 
 "[Ralph Wiggum](https://ghuntley.com/ralph/)" autonomous AI coding loop, using [bd (beads)](https://github.com/steveyegge/beads) for task management with parallel tmux subagents.
 
-Ships features while you sleep.
+Ralph ships features while you sleep, by eating all of the beads. 
+
+For those in the know, you can think of Ralph Eats Beads as "Gas Town Lite". I find it much more powerful than a "vanilla Ralph" loop, yet much faster to start and easier to wield than [Gas Town](https://github.com/steveyegge/gastown).
 
 ## Installation
 
@@ -80,7 +82,7 @@ tmux attach -t ralph-<project>
 
 ## Planning: Converting Requirements to Issues
 
-In a typical "Ralph eats beads" workflow, you would have already converted your plan into bd epics, issues, dependencies, and notes before running `ralph.sh`. This is the recommended approach—think through the work breakdown, set up proper dependencies, and let Ralph execute.
+In a typical "Ralph eats beads" workflow, you would have already converted your plan into bd epics, issues, dependencies, and notes before running `ralph.sh`. This is the recommended approach: carefully curate the plan, collaborate with Claude/Codex/etc to convert to bd and make sure that the agent does not miss any details. I often find it helpful to ask Claude to spin up an "auditor" subagent to check that every aspect of the plan was converted to bd. I also include in my CLAUDE.md: `When exiting Plan Mode, all plans must be fully converted into bd epics, issues, dependencies, and notes`.
 
 However, if you haven't done that step yet, you can use the **planner script** to generate bd issues from a requirements file:
 
