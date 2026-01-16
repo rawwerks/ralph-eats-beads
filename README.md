@@ -4,24 +4,25 @@ Autonomous AI coding loop using bd (beads) for task management with parallel tmu
 
 Ships features while you sleep.
 
-## Claude Code Plugin Installation
+## Install in Claude Code
 
-Add this skill to Claude Code:
+### Step 1: Add the marketplace
 
-```bash
-# Via Claude Code CLI
-claude skill add rawwerks/ralph-eats-beads
+```
+/plugin marketplace add rawwerks/ralph-eats-beads
 ```
 
-Or add to your `.claude/settings.json`:
+### Step 2: Install the plugin
 
-```json
-{
-  "skills": [
-    "rawwerks/ralph-eats-beads"
-  ]
-}
 ```
+/plugin install ralph-bd@ralph-eats-beads
+```
+
+Or browse and install:
+1. Select `Browse and install plugins`
+2. Select `ralph-eats-beads`
+3. Select `ralph-bd`
+4. Select `Install now`
 
 ## Overview
 

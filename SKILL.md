@@ -1,6 +1,7 @@
 ---
 name: ralph-bd
 description: Autonomous AI coding loop using bd for task management with parallel tmux subagents. Ships features while you sleep.
+license: MIT
 ---
 
 # Ralph BD - Parallel Autonomous Coding Loop

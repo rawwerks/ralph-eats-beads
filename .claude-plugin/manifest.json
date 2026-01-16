@@ -1,13 +1,12 @@
 {
   "name": "ralph-eats-beads",
   "owner": {
-    "name": "Raymond Weitekamp",
+    "name": "rawwerks",
     "url": "https://github.com/rawwerks"
   },
   "metadata": {
-    "description": "Autonomous AI coding loop using bd (beads) for task management with parallel tmux subagents",
-    "version": "1.0.0",
-    "repository": "https://github.com/rawwerks/ralph-eats-beads"
+    "description": "Autonomous AI coding loop using bd (beads) for task management with parallel tmux subagents. Ships features while you sleep.",
+    "version": "1.0.0"
   },
   "plugins": [
     {
