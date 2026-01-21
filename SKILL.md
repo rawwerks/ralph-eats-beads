@@ -25,7 +25,7 @@ ralph (tmux session)
 
 - **br** initialized with issues/epic
 - **tmux** installed
-- **Claude CLI** (`claude` command available)
+- **Codex CLI** (`codexy` command available)
 
 ## Quick Start
 

@@ -45,7 +45,7 @@ export PROJECT_DIR='$PROJECT_DIR'
 
 cd '$PROJECT_DIR'
 
-cat << 'PROMPT_EOF' | claude --dangerously-skip-permissions
+cat << 'PROMPT_EOF' | codexy
 $(cat "$PROMPT_FILE")
 
 ## Current Environment

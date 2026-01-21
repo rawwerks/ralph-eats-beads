@@ -17,11 +17,11 @@ For those in the know, you can think of Ralph Eats Beads as "Gas Town Lite". I f
 /plugin install ralph-eats-beads@ralph-eats-beads
 ```
 
-### Claude CLI
+### Codex CLI
 
 ```bash
-claude plugin marketplace add rawwerks/ralph-eats-beads
-claude plugin install ralph-eats-beads@ralph-eats-beads
+codexy plugin marketplace add rawwerks/ralph-eats-beads
+codexy plugin install ralph-eats-beads@ralph-eats-beads
 ```
 
 ## What It Does
@@ -47,7 +47,7 @@ ralph (tmux session)
 
 - **[br (beads_rust)](https://github.com/Dicklesworthstone/beads_rust)** - Issue tracker (beads_rust)
 - **tmux** - Terminal multiplexer
-- **claude** - Claude CLI with `--dangerously-skip-permissions`
+- **codexy** - Codex CLI (yolo mode)
 
 ## Quick Start
 
