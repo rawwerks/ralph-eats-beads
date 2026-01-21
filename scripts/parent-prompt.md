@@ -46,7 +46,7 @@ ISSUE_ID="<id>"
 SHORT_ID=$(echo "$ISSUE_ID" | sed 's/.*-\([^-]*\.[0-9]*\)$/\1/' | head -c 10)
 TITLE="$(br show "$ISSUE_ID" --json 2>/dev/null | jq -r '.[0].title // empty' | head -c 30)"
 
-tmux new-window -t "$RALPH_ID" -n "$SHORT_ID" "cat << 'EOF' | bunx --bun @openai/codex@latest --dangerously-bypass-approvals-and-sandbox; sleep 2
+tmux new-window -t "$RALPH_ID" -n "$SHORT_ID" "cat << 'EOF' | bunx --bun @openai/codex@latest exec --dangerously-bypass-approvals-and-sandbox; sleep 2
 # Subagent: $ISSUE_ID
 
 ## Task

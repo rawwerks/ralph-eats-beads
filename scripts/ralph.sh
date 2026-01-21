@@ -7,7 +7,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CODEX_CMD=${CODEX_CMD:-"bunx --bun @openai/codex@latest --dangerously-bypass-approvals-and-sandbox"}
+CODEX_CMD=${CODEX_CMD:-"bunx --bun @openai/codex@latest exec --dangerously-bypass-approvals-and-sandbox"}
 
 # Auto-detect RALPH_ID from git repo, allow override
 detect_ralph_id() {
