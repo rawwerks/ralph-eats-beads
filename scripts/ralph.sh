@@ -133,7 +133,7 @@ For each issue to work on:
 ISSUE_ID="<full-issue-id>"
 SHORT_ID=$(echo "$ISSUE_ID" | grep -oE '[a-z0-9]+$' | head -c 8)
 
-tmux new-window -t "SESSION_ID" -n "$SHORT_ID" "cat << 'SUBAGENT_EOF' | $CODEX_CMD
+tmux new-window -t "SESSION_ID" -n "$SHORT_ID" "cat << 'SUBAGENT_EOF' | CODEX_CMD
 # Subagent: $ISSUE_ID
 
 ## Your Task
@@ -203,7 +203,8 @@ for ITER in $(seq 1 $MAX_ITERATIONS); do
   echo ""
 
   # Build prompt with substitutions
-  PARENT_PROMPT=$(build_parent_prompt $ITER | sed "s/ITER_NUM/$ITER/g; s/MAX_ITER/$MAX_ITERATIONS/g; s/SESSION_ID/$SESSION/g; s|PROJECT_PATH|$PROJECT_DIR|g")
+  CODEX_ESCAPED=$(printf '%s' "$CODEX_CMD" | sed 's/[\/&]/\\&/g')
+  PARENT_PROMPT=$(build_parent_prompt $ITER | sed "s/ITER_NUM/$ITER/g; s/MAX_ITER/$MAX_ITERATIONS/g; s/SESSION_ID/$SESSION/g; s|PROJECT_PATH|$PROJECT_DIR|g; s/CODEX_CMD/$CODEX_ESCAPED/g")
 
   # Write prompt to temp file to avoid escaping issues
   PROMPT_FILE="/tmp/ralph-parent-prompt-$$"
