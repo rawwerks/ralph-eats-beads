@@ -24,7 +24,7 @@ while br ready has work AND iteration < MAX_ITERATIONS:
 ## Step 1: Check Work
 
 ```bash
-br ready --limit 10 --json
+br ready --type task --limit 10 --json
 ```
 
 If empty → run `br sync --flush-only`, then `git add .beads/ && git commit`, then output "All issues complete!" and exit.
@@ -90,7 +90,7 @@ git add .beads/
 git commit -m "sync beads"
 
 # What's still ready?
-REMAINING=$(br ready --json 2>/dev/null | jq 'length')
+REMAINING=$(br ready --type task --json 2>/dev/null | jq 'length')
 echo "Remaining issues: $REMAINING"
 
 # What closed this iteration?
@@ -119,4 +119,4 @@ Then exit.
 
 ---
 
-Begin now. Check `br ready` and start your first iteration.
+Begin now. Check `br ready` for tasks and start your first iteration.

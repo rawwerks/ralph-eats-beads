@@ -119,7 +119,7 @@ You are the parent orchestrator for ONE iteration of Ralph. Spawn subagents, the
 ## Your Job (Single Iteration)
 
 1. Run `br info` to understand the project
-2. Run `br ready --limit 10` to see available work
+2. Run `br ready --type task --limit 10` to see available work
 3. If no work ready → output "NO_WORK_REMAINING" and exit
 4. Analyze which issues can run in parallel (different files = parallel)
 5. Spawn 3-5 subagent windows
@@ -172,7 +172,7 @@ echo "SUBAGENTS_SPAWNED"
 ```
 Then type /exit
 
-Begin now. Run br info, check br ready, spawn subagents, exit.
+Begin now. Run br info, check br ready for tasks, spawn subagents, exit.
 PROMPT_EOF
 }
 
@@ -191,7 +191,7 @@ for ITER in $(seq 1 $MAX_ITERATIONS); do
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   # Check if work remains
-  READY_COUNT=$(cd "$PROJECT_DIR" && br ready 2>/dev/null | grep -cE '^\[|^[0-9]+\.' || echo "0")
+  READY_COUNT=$(cd "$PROJECT_DIR" && br ready --type task 2>/dev/null | grep -cE '^\[|^[0-9]+\.' || echo "0")
 
   if [ "$READY_COUNT" -eq 0 ]; then
     echo "✓ No work remaining. All done!"
