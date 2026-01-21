@@ -34,7 +34,7 @@ tmux send-keys -t "$RALPH_ID:<window>" '<text>' Enter
 tmux kill-window -t "$RALPH_ID:<window>"
 
 # Check issue status
-cd "$PROJECT_DIR" && bd show <issue-id> --json | jq -r '.[0].status'
+cd "$PROJECT_DIR" && br show <issue-id> --json | jq -r '.[0].status'
 ```
 
 ## Detecting Stuck State
@@ -53,13 +53,13 @@ A window is idle/stuck if its pane output contains:
 | Subagent idle + issue open (2nd check) | `tmux kill-window` - let parent retry |
 | Parent idle + no subagents + work ready | Send Enter or "Continue your loop" |
 | Parent idle + subagents exist | Wait - subagents working |
-| **No work left** (`bd ready` empty) + only parent window | Sync and `/exit` - bash handles shutdown |
+| **No work left** (`br ready` empty) + only parent window | Sync and `/exit` - bash handles shutdown |
 | Session gone | Exit watchdog |
 
 ## Clean Exit Protocol
 
-When `bd ready` returns empty (no work left):
-1. Run `bd sync` to push final state
+When `br ready` returns empty (no work left):
+1. Run `br sync --flush-only`, then `git add .beads/ && git commit` to push final state
 2. Send to parent: "[WATCHDOG] All issues complete! Bash will handle shutdown."
 3. Run `/exit` to close yourself
 
@@ -71,12 +71,12 @@ Always identify yourself as the watchdog. Don't ask questions - give clear instr
 
 For stuck subagents:
 ```bash
-tmux send-keys -t "$RALPH_ID:$WINDOW" '[WATCHDOG] You appear idle. Complete your task and bd close the issue, or /exit if stuck. No response needed - just act.' Enter
+tmux send-keys -t "$RALPH_ID:$WINDOW" '[WATCHDOG] You appear idle. Complete your task and br close the issue, or /exit if stuck. No response needed - just act.' Enter
 ```
 
 For idle parent with no subagents:
 ```bash
-tmux send-keys -t "$RALPH_ID:parent" '[WATCHDOG] All subagent windows closed. Continue your loop - check bd ready and spawn the next batch. No response needed.' Enter
+tmux send-keys -t "$RALPH_ID:parent" '[WATCHDOG] All subagent windows closed. Continue your loop - check br ready and spawn the next batch. No response needed.' Enter
 ```
 
 For idle parent waiting for subagents:

@@ -1,14 +1,14 @@
 ---
 name: ralph-eats-beads
-description: Autonomous AI coding loop using bd for task management with parallel tmux subagents. Ships features while you sleep.
+description: Autonomous AI coding loop using br for task management with parallel tmux subagents. Ships features while you sleep.
 license: MIT
 ---
 
-# Ralph BD - Parallel Autonomous Coding Loop
+# Ralph BR - Parallel Autonomous Coding Loop
 
 **Contract**: `skills-lib-lkv` (Ralph Contract v1)
 
-Ralph runs Claude agents in a loop, picking tasks from `bd ready`, implementing them, and closing them on success. This version uses tmux for observability and supports parallel subagents.
+Ralph runs Claude agents in a loop, picking tasks from `br ready`, implementing them, and closing them on success. This version uses tmux for observability and supports parallel subagents.
 
 ## Architecture
 
@@ -16,14 +16,14 @@ Ralph runs Claude agents in a loop, picking tasks from `bd ready`, implementing 
 ralph (tmux session)
 ├── parent (window 0) - orchestrator Claude
 ├── watchdog (window 1) - health monitor Claude (optional)
-├── BD-001 (window 2) - subagent
-├── BD-002 (window 3) - subagent
-└── BD-003 (window 4) - subagent
+├── br-001 (window 2) - subagent
+├── br-002 (window 3) - subagent
+└── br-003 (window 4) - subagent
 ```
 
 ## Prerequisites
 
-- **bd** initialized with issues/epic
+- **br** initialized with issues/epic
 - **tmux** installed
 - **Claude CLI** (`claude` command available)
 
@@ -33,10 +33,10 @@ ralph (tmux session)
 
 ```bash
 # 1. Create your epic and issues
-bd create --type epic "Feature: User Authentication"
-bd create "Add login form" --parent BD-001 --priority 1
-bd create "Add email validation" --parent BD-001 --priority 2
-bd create "Add auth server action" --parent BD-001 --priority 3
+br create --type epic "Feature: User Authentication"
+br create "Add login form" --parent br-001 --priority 1
+br create "Add email validation" --parent br-001 --priority 2
+br create "Add auth server action" --parent br-001 --priority 3
 
 # 2. Start Ralph (25 max iterations)
 scripts/ralph.sh 25
@@ -68,12 +68,12 @@ scripts/ralph.sh 25
 
 | Script | Session | Purpose |
 |--------|---------|---------|
-| `planner.sh` | ralph-plan | **Recursive loop** - creates/refines bd issues until plan is complete |
-| `ralph.sh` | ralph | **Parallel loop** - implements issues from `bd ready` |
+| `planner.sh` | ralph-plan | **Recursive loop** - creates/refines br issues until plan is complete |
+| `ralph.sh` | ralph | **Parallel loop** - implements issues from `br ready` |
 
 **Workflow:**
 ```
-Requirements → planner.sh (iterates) → bd issues → ralph.sh (parallel) → Implemented code
+Requirements → planner.sh (iterates) → br issues → ralph.sh (parallel) → Implemented code
 ```
 
 Both loops support `MAX_ITERATIONS` - planner defaults to 3, implementation defaults to 10.
@@ -88,20 +88,22 @@ ralph.sh (bash loop)
 │   ├── Spawn fresh Claude parent
 │   ├── Parent spawns subagents, then exits
 │   ├── Bash waits for subagent windows to close
-│   ├── bd sync
-│   └── Check bd ready → continue or done
+│   ├── br sync --flush-only
+│   ├── git add .beads/
+│   ├── git commit -m "sync beads"
+│   └── Check br ready → continue or done
 ├── Iteration 2
 │   └── (repeat with fresh context)
 └── ...
 ```
 
-1. Bash checks `bd ready` for available work
+1. Bash checks `br ready` for available work
 2. Bash spawns fresh Claude parent for this iteration
-3. Parent runs `bd prime`, analyzes parallelizability
+3. Parent runs `br info`, analyzes parallelizability
 4. Parent spawns subagent tmux windows (3-5 concurrent), then exits
 5. Bash waits for all subagent windows to close
 6. Each subagent implements ONE issue, commits, closes issue
-7. Bash syncs bd and loops until no work remains
+7. Bash syncs br and loops until no work remains
 
 ## Observer Commands
 
@@ -113,13 +115,13 @@ tmux attach -t ralph
 tmux select-layout -t ralph tiled
 
 # Watch specific agent
-tmux select-window -t ralph:BD-123
+tmux select-window -t ralph:br-123
 
 # Capture agent output
-tmux capture-pane -t ralph:BD-123 -p -S -1000 > agent.log
+tmux capture-pane -t ralph:br-123 -p -S -1000 > agent.log
 
 # Kill stuck agent
-tmux kill-window -t ralph:BD-123
+tmux kill-window -t ralph:br-123
 
 # Kill entire session
 tmux kill-session -t ralph
@@ -127,13 +129,13 @@ tmux kill-session -t ralph
 
 ## Planner Details
 
-The planner (`scripts/planner.sh`) runs a **recursive loop** that iterates until the bd plan fully covers the input requirements:
+The planner (`scripts/planner.sh`) runs a **recursive loop** that iterates until the br plan fully covers the input requirements:
 
 ```
 while iteration < MAX_ITERATIONS:
     1. Read input plan file
-    2. Check current bd state (existing issues)
-    3. Compare: what's in the plan but missing from bd?
+    2. Check current br state (existing issues)
+    3. Compare: what's in the plan but missing from br?
     4. If nothing missing → exit with summary
     5. Create missing issues with dependencies
     6. Repeat
@@ -141,7 +143,7 @@ while iteration < MAX_ITERATIONS:
 
 Each iteration the planner:
 1. **Re-reads the plan** - Keeps the source of truth in focus
-2. **Audits bd state** - What stories exist? What's missing?
+2. **Audits br state** - What stories exist? What's missing?
 3. **Fills gaps** - Creates issues for uncovered sections
 4. **Sets dependencies** - Ensures correct build order
 
@@ -201,7 +203,7 @@ tmux select-window -t ralph-myproject:watchdog
 
 The watchdog:
 - **Detects idle agents** - Looks for Claude CLI prompts indicating waiting state
-- **Checks issue status** - Queries bd to see if work is complete
+- **Checks issue status** - Queries br to see if work is complete
 - **Nudges stuck agents** - Sends tmux keystrokes to prompt them to continue
 - **Kills completed windows** - Cleans up windows where the issue is closed
 - **Kicks the parent** - Sends Enter if parent is idle with work remaining
@@ -226,38 +228,40 @@ The passive monitor detects:
 - **COMPLETE**: No ready work and only parent window
 - **RUNNING**: Normal operation with active subagents
 
-## bd Workflow
+## br (beads_rust) Workflow
+
+**Note:** `br` is non-invasive and never executes git commands. After `br sync --flush-only`, you must manually run `git add .beads/ && git commit`.
 
 ### Setup Work
 
 ```bash
 # Create epic
-bd create --type epic "Feature: Dark Mode"  # → BD-001
+br create --type epic "Feature: Dark Mode"  # → br-001
 
 # Create stories
-bd create "Add theme toggle" --parent BD-001 --priority 1
-bd create "Add theme context" --parent BD-001 --priority 2
-bd create "Update components" --parent BD-001 --priority 3
+br create "Add theme toggle" --parent br-001 --priority 1
+br create "Add theme context" --parent br-001 --priority 2
+br create "Update components" --parent br-001 --priority 3
 
-# Add dependencies (bd ready respects these)
-bd dep add BD-004 BD-003  # BD-004 depends on BD-003
+# Add dependencies (br ready respects these)
+br dep add br-004 br-003  # br-004 depends on br-003
 ```
 
 ### Monitor Progress
 
 ```bash
-bd ready              # What's workable?
-bd epic status BD-001 # Epic completion
-bd blocked            # What's stuck?
-bd activity           # Recent changes
+br ready              # What's workable?
+br epic status br-001 # Epic completion
+br blocked            # What's stuck?
+br history            # Recent changes
 ```
 
 ### After Completion
 
 ```bash
-bd list --state closed --parent BD-001  # All closed?
-bd show BD-002 --comments               # Review learnings
-bd epic close-eligible                  # Close the epic
+br list --state closed --parent br-001  # All closed?
+br show br-002 --comments               # Review learnings
+br epic close-eligible                  # Close the epic
 ```
 
 ## Best Practices
@@ -284,10 +288,10 @@ Acceptance Criteria:
 
 ### Learnings Accumulate
 
-Agents add learnings via `bd comments`. Future iterations benefit:
+Agents add learnings via `br comments`. Future iterations benefit:
 ```bash
-bd show BD-005 --comments
-bd search "migration pattern"
+br show br-005 --comments
+br search "migration pattern"
 ```
 
 ## Not Suitable For

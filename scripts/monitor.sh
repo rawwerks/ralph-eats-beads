@@ -28,12 +28,12 @@ check_session() {
   WINDOW_NAMES=$(tmux list-windows -t "$SESSION" -F '#{window_name}' 2>/dev/null | tr '\n' ' ')
   echo "Windows ($WINDOWS): $WINDOW_NAMES" >> "$LOG"
 
-  # Try to get bd stats from the session's working directory
+  # Try to get br stats from the session's working directory
   if [ -n "$PROJECT_DIR" ] && [ -d "$PROJECT_DIR/.beads" ]; then
     cd "$PROJECT_DIR" 2>/dev/null || true
-    CLOSED=$(bd list --status=closed 2>/dev/null | grep -c "^[0-9]\|^\[" || echo "?")
-    READY=$(bd ready 2>/dev/null | grep -c "^[0-9]\|^\[" || echo "?")
-    IN_PROGRESS=$(bd list --status=in_progress 2>/dev/null | grep -c "^[0-9]\|^\[" || echo "?")
+    CLOSED=$(br list --status=closed 2>/dev/null | grep -c "^[0-9]\|^\[" || echo "?")
+    READY=$(br ready 2>/dev/null | grep -c "^[0-9]\|^\[" || echo "?")
+    IN_PROGRESS=$(br list --status=in_progress 2>/dev/null | grep -c "^[0-9]\|^\[" || echo "?")
     echo "Closed: $CLOSED | In Progress: $IN_PROGRESS | Ready: $READY" >> "$LOG"
   else
     READY="?"

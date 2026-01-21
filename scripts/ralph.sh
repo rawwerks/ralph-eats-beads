@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ralph BD - Multi-repo autonomous coding loop
+# Ralph BR - Multi-repo autonomous coding loop
 # Contract: skills-lib-lkv (Ralph Contract v1)
 #
 # Key principle: Bash manages iteration loop, each iteration gets fresh Claude context
@@ -117,8 +117,8 @@ You are the parent orchestrator for ONE iteration of Ralph. Spawn subagents, the
 
 ## Your Job (Single Iteration)
 
-1. Run `bd prime` to understand the project
-2. Run `bd ready --limit 10` to see available work
+1. Run `br info` to understand the project
+2. Run `br ready --limit 10` to see available work
 3. If no work ready → output "NO_WORK_REMAINING" and exit
 4. Analyze which issues can run in parallel (different files = parallel)
 5. Spawn 3-5 subagent windows
@@ -136,18 +136,18 @@ tmux new-window -t "SESSION_ID" -n "$SHORT_ID" "cat << 'SUBAGENT_EOF' | claude -
 # Subagent: $ISSUE_ID
 
 ## Your Task
-$(bd show $ISSUE_ID)
+$(br show $ISSUE_ID)
 
 ## Instructions
-1. Run bd prime first
+1. Run br info first
 2. Implement this ONE issue
 3. Run tests if applicable
 4. On SUCCESS:
    - git add -A && git commit -m \"feat: $SHORT_ID - brief description\"
-   - bd close $ISSUE_ID
+   - br close $ISSUE_ID
 5. On FAILURE:
    - Do NOT close the issue
-   - bd comments add $ISSUE_ID \"Blocked: <reason>\"
+   - br comments add $ISSUE_ID \"Blocked: <reason>\"
 6. Type /exit when done
 
 Stay focused on THIS issue only.
@@ -171,7 +171,7 @@ echo "SUBAGENTS_SPAWNED"
 ```
 Then type /exit
 
-Begin now. Run bd prime, check bd ready, spawn subagents, exit.
+Begin now. Run br info, check br ready, spawn subagents, exit.
 PROMPT_EOF
 }
 
@@ -190,7 +190,7 @@ for ITER in $(seq 1 $MAX_ITERATIONS); do
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   # Check if work remains
-  READY_COUNT=$(cd "$PROJECT_DIR" && bd ready 2>/dev/null | grep -cE '^\[|^[0-9]+\.' || echo "0")
+  READY_COUNT=$(cd "$PROJECT_DIR" && br ready 2>/dev/null | grep -cE '^\[|^[0-9]+\.' || echo "0")
 
   if [ "$READY_COUNT" -eq 0 ]; then
     echo "✓ No work remaining. All done!"
@@ -252,9 +252,10 @@ for ITER in $(seq 1 $MAX_ITERATIONS); do
     fi
   done
 
-  # Sync bd after each iteration
-  echo "  Syncing bd..."
-  (cd "$PROJECT_DIR" && bd sync 2>/dev/null) || true
+  # Sync br after each iteration
+  echo "  Syncing br..."
+  (cd "$PROJECT_DIR" && br sync --flush-only 2>/dev/null) || true
+  (cd "$PROJECT_DIR" && git add .beads/ && git commit -m "sync beads" 2>/dev/null) || true
 
   # Small delay between iterations
   sleep 5
@@ -268,12 +269,13 @@ echo "  RALPH COMPLETE"
 echo "════════════════════════════════════════════════════════════════"
 
 cd "$PROJECT_DIR"
-bd sync 2>/dev/null || true
+br sync --flush-only 2>/dev/null || true
+git add .beads/ && git commit -m "sync beads" 2>/dev/null || true
 git push 2>/dev/null || echo "(git push skipped or failed)"
 
 echo ""
 echo "Final stats:"
-bd stats 2>/dev/null || true
+br stats 2>/dev/null || true
 
 echo ""
 echo "Session '$SESSION' still running for review."

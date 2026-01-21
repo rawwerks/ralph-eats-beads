@@ -1,6 +1,6 @@
 #!/bin/bash
 # Ralph Planner - Recursive planning loop
-# Runs iterations until bd plan fully covers input requirements
+# Runs iterations until br plan fully covers input requirements
 # Auto-detects session name from git repo, supports multiple concurrent planners
 
 set -e
@@ -86,7 +86,7 @@ echo "   Plan file: $PLAN_PATH"
 echo ""
 
 # Build command that syncs and marks complete on exit
-CLAUDE_CMD="cd '$(dirname "$PLAN_PATH")' 2>/dev/null || true; MAX_ITERATIONS=$MAX_ITERATIONS PLAN_PATH='$PLAN_PATH' cat '$SCRIPT_DIR/planner-prompt.md' | claude --dangerously-skip-permissions; EXIT_CODE=\$?; echo ''; echo 'Agent exited. Syncing...'; bd sync 2>/dev/null || echo 'bd sync skipped'; touch '$COMPLETION_MARKER'; exit \$EXIT_CODE"
+CLAUDE_CMD="cd '$(dirname "$PLAN_PATH")' 2>/dev/null || true; MAX_ITERATIONS=$MAX_ITERATIONS PLAN_PATH='$PLAN_PATH' cat '$SCRIPT_DIR/planner-prompt.md' | claude --dangerously-skip-permissions; EXIT_CODE=\$?; echo ''; echo 'Agent exited. Syncing...'; br sync --flush-only 2>/dev/null || echo 'br sync skipped'; git add .beads/ && git commit -m \"sync beads\" 2>/dev/null || true; touch '$COMPLETION_MARKER'; exit \$EXIT_CODE"
 
 # Launch planner agent
 tmux send-keys -t "$SESSION:parent" "$CLAUDE_CMD" Enter
@@ -122,7 +122,7 @@ while [ $ELAPSED -lt $TIMEOUT ]; do
     # Show next steps
     echo ""
     echo "Next steps:"
-    echo "  bd ready              # See available work"
+    echo "  br ready              # See available work"
     echo "  ./ralph.sh 25         # Start implementation loop"
     exit 0
   fi
