@@ -10,6 +10,7 @@ set -e
 RALPH_ID="${1:-ralph}"
 CHECK_INTERVAL="${2:-60}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_CMD=${CODEX_CMD:-"bunx --bun @openai/codex@latest --dangerously-bypass-approvals-and-sandbox"}
 PROMPT_FILE="$SCRIPT_DIR/watchdog-prompt.md"
 
 # Detect project directory from session
@@ -45,7 +46,7 @@ export PROJECT_DIR='$PROJECT_DIR'
 
 cd '$PROJECT_DIR'
 
-cat << 'PROMPT_EOF' | codexy
+cat << 'PROMPT_EOF' | $CODEX_CMD
 $(cat "$PROMPT_FILE")
 
 ## Current Environment

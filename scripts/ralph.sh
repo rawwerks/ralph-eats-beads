@@ -7,6 +7,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_CMD=${CODEX_CMD:-"bunx --bun @openai/codex@latest --dangerously-bypass-approvals-and-sandbox"}
 
 # Auto-detect RALPH_ID from git repo, allow override
 detect_ralph_id() {
@@ -132,7 +133,7 @@ For each issue to work on:
 ISSUE_ID="<full-issue-id>"
 SHORT_ID=$(echo "$ISSUE_ID" | grep -oE '[a-z0-9]+$' | head -c 8)
 
-tmux new-window -t "SESSION_ID" -n "$SHORT_ID" "cat << 'SUBAGENT_EOF' | codexy
+tmux new-window -t "SESSION_ID" -n "$SHORT_ID" "cat << 'SUBAGENT_EOF' | $CODEX_CMD
 # Subagent: $ISSUE_ID
 
 ## Your Task
@@ -209,7 +210,7 @@ for ITER in $(seq 1 $MAX_ITERATIONS); do
   echo "$PARENT_PROMPT" > "$PROMPT_FILE"
 
   # Spawn fresh Claude parent for this iteration
-  tmux send-keys -t "$SESSION:parent" "cd '$PROJECT_DIR' && codexy < '$PROMPT_FILE'; rm -f '$PROMPT_FILE'" Enter
+  tmux send-keys -t "$SESSION:parent" "cd '$PROJECT_DIR' && $CODEX_CMD < '$PROMPT_FILE'; rm -f '$PROMPT_FILE'" Enter
 
   # Wait for parent to spawn subagents (give it time to analyze and spawn)
   echo "  Waiting for parent to spawn subagents..."
