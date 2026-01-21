@@ -122,7 +122,7 @@ You are the parent orchestrator for ONE iteration of Ralph. Spawn subagents, the
 2. Run `br ready --type task --limit 10` to see available work
 3. If no work ready → output "NO_WORK_REMAINING" and exit
 4. Analyze which issues can run in parallel (different files = parallel)
-5. Spawn 3-5 subagent windows
+5. Spawn up to 3-5 subagent windows (if fewer tasks are ready, spawn only those)
 6. Output "SUBAGENTS_SPAWNED" and exit - bash will wait for them
 
 ## Spawning Subagents

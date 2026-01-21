@@ -15,7 +15,7 @@ Use `$RALPH_ID` in all tmux commands.
 while br ready has work AND iteration < MAX_ITERATIONS:
     1. Get ready issues
     2. Analyze which can parallelize
-    3. Spawn 3-5 subagent tmux windows
+    3. Spawn up to 3-5 subagent tmux windows (if fewer tasks are ready, spawn only those)
     4. Poll until all subagent windows close
     5. Sync and verify results
     6. Repeat
@@ -34,7 +34,7 @@ If empty → run `br sync --flush-only`, then `git add .beads/ && git commit`, t
 Group issues by conflict potential:
 - **Same files likely** → serialize
 - **Different areas** → parallelize
-- Limit to **3-5 concurrent** agents
+- Limit to **3-5 concurrent** agents (or fewer if fewer tasks are ready)
 
 ## Step 3: Spawn Subagents
 
